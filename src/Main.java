@@ -17,7 +17,7 @@ public class Main {
 		
 		String line;
 		line = br.readLine();
-		while(line != null) {
+		while(line != null){//line.length() >= 1 && line != null){// && line != "\n") {
 			BigInteger tmp = new BigInteger(line);
 			number.add(tmp);
 			line = br.readLine();
@@ -27,24 +27,32 @@ public class Main {
 			answers.add(new LinkedList<String>());
 			BigInteger newNumber = number.get(i);
 			
+			if(newNumber.isProbablePrime(6))
+			{
+				answers.get(i).add(newNumber.toString());
+				continue;				
+			}
 			if(newNumber.bitLength() > 54) {
 				answers.get(i).add("fail");
 				continue;
 			}
-			
-			BigInteger factorNr = factor(newNumber);
+			BigInteger start = new BigInteger("2");			
+			BigInteger factorNr = factor(newNumber, start);
 			
 			// Primtal
 			if(factorNr == BigInteger.ZERO) {
 				answers.get(i).add(newNumber.toString());
 				continue;
 			}
-			
-			while(factorNr != BigInteger.ZERO) {				
+
+			while(factorNr != BigInteger.ZERO) {	
+				start = factorNr;
 				answers.get(i).add(factorNr.toString());
 				newNumber = newNumber.divide(factorNr);
 				
-				factorNr = factor(newNumber);
+				factorNr = factor(newNumber, start);
+				
+				
 			}	
 			answers.get(i).add(newNumber.toString());
 		}
@@ -53,11 +61,12 @@ public class Main {
 		print(answers);
 	}
 	
-	private static BigInteger factor(BigInteger number) {
+	private static BigInteger factor(BigInteger number, BigInteger start) {
 		BigInteger bound = new BigInteger("" + (int)Math.sqrt(number.doubleValue()));
-		BigInteger TWO = new BigInteger("2");
-		int test = TWO.compareTo(bound);
-		for(BigInteger i = TWO; i.compareTo(bound) <= 0; i = i.add(BigInteger.ONE)) {
+		BigInteger START = start;
+		//BigInteger TWO = new BigInteger("2");
+		//int test = TWO.compareTo(bound);
+		for(BigInteger i = START; i.compareTo(bound) <= 0; i = i.add(BigInteger.ONE)) {
 			if(number.mod(i).compareTo(BigInteger.ZERO) == 0) {
 				return i;
 			}
