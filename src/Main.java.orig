@@ -1,0 +1,263 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Random;
+import java.math.BigInteger;
+
+import javax.naming.TimeLimitExceededException;
+
+public class Main {
+
+	static BigInteger ZERO = BigInteger.ZERO;
+	static BigInteger ONE = BigInteger.ONE;
+	static BigInteger TWO = new BigInteger("2");
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) throws IOException {
+<<<<<<< HEAD
+		//main2(null);
+		ArrayList<LinkedList<BigInteger>> answers = new ArrayList<LinkedList<BigInteger>>();
+		ArrayList<BigInteger> numbers = read();
+=======
+		ArrayList<BigInteger> number = new ArrayList<BigInteger>();
+		ArrayList<LinkedList<String>> answers = new ArrayList<LinkedList<String>>();
+		BigInteger TWO = new BigInteger("2");
+		
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
+		
+		LinkedList<BigInteger> fail = new LinkedList<BigInteger>();
+		fail.add(BigInteger.ZERO);
+		
+<<<<<<< HEAD
+		PollardRho pollardRho = new PollardRho();
+		TrialDivision trialDivision = new TrialDivision();
+		
+		long timeSlice = 50;
+		
+		for(int i = 0; i < numbers.size(); i++) {
+			BigInteger currentNumber = numbers.get(i);
+			try {
+				if(currentNumber.mod(TWO).compareTo(BigInteger.ZERO) == 0 || currentNumber.bitLength() < 50) {
+					answers.add(pollardRho.getFactors(currentNumber, (System.currentTimeMillis() + timeSlice)));	
+				} else {
+					BigInteger[] smallerN = fermat(currentNumber);
+	
+					answers.add(pollardRho.getFactors(smallerN[0], (System.currentTimeMillis() + timeSlice)));	
+					if(answers.get(i) != null)
+						answers.get(i).addAll(pollardRho.getFactors(smallerN[1], (System.currentTimeMillis() + timeSlice)));
+					else
+						answers.add(i, pollardRho.getFactors(currentNumber, (System.currentTimeMillis() + timeSlice)));
+				}
+			} catch (TimeLimitExceededException e) {
+				answers.add(null);
+			}
+=======
+		String line;
+		line = br.readLine();
+		while(line.length() >= 1){//line != null ) {//    //I can't run it on my computer  with line != null but it is nessesary for KATTIS
+			BigInteger tmp = new BigInteger(line);
+			number.add(tmp);
+			line = br.readLine();
+		} 
+		
+		for(int i = 0; i < number.size(); i++) {
+			answers.add(new LinkedList<String>());
+			BigInteger newNumber = number.get(i);
+			
+			if(newNumber.isProbablePrime(2))
+			{
+				answers.get(i).add(newNumber.toString());
+				continue;				
+			}
+			if(newNumber.bitLength() > 70) {
+				answers.get(i).add("fail");
+				continue;
+			}
+			
+			if(newNumber.mod(TWO).compareTo(BigInteger.ZERO) == 0 || newNumber.bitLength() < 50)
+			{
+				BigInteger start = new BigInteger("2");			
+				BigInteger factorNr = factor(newNumber, start);
+				
+				// Primtal
+				if(factorNr == BigInteger.ZERO) {
+					answers.get(i).add(newNumber.toString());
+					continue;
+				}
+	
+				while(factorNr != BigInteger.ZERO) {	
+					start = factorNr;
+					answers.get(i).add(factorNr.toString());
+					newNumber = newNumber.divide(factorNr);
+					
+					factorNr = factor(newNumber, start);
+				}			
+								
+				answers.get(i).add(newNumber.toString());				
+			}
+			
+			else
+			{
+				BigInteger[] smallerN = fermat(newNumber);
+				//System.out.println(smallerN[0] + " " + smallerN[1] + "|| ");
+				for(int j = 0; j < 2; j++)
+				{
+					BigInteger start = new BigInteger("2");			
+					BigInteger factorNr = factor(smallerN[j], start);
+					
+					// Primtal
+					if(factorNr == BigInteger.ZERO) {
+						answers.get(i).add(smallerN[j].toString());
+						continue;
+					}
+		
+					while(factorNr != BigInteger.ZERO) {	
+						start = factorNr;
+						answers.get(i).add(factorNr.toString());
+						smallerN[j] = smallerN[j].divide(factorNr);
+						
+						factorNr = factor(smallerN[j], start);
+						
+						
+					}
+					
+					answers.get(i).add(smallerN[j].toString());
+				}
+			}
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
+		}
+
+		print(answers);
+	}
+	
+<<<<<<< HEAD
+	public static void main2 (String[] args) {
+		Random rnd = new Random();
+		PollardRho pollardRho = new PollardRho();
+		
+		while (true) {
+			BigInteger b1 = BigInteger.probablePrime(32, rnd);
+			BigInteger b2 = BigInteger.probablePrime(32, rnd);
+			BigInteger b3 = BigInteger.probablePrime(32, rnd);
+			BigInteger b4 = BigInteger.probablePrime(32, rnd);
+			BigInteger bi = b1.multiply(b2).multiply(b3).multiply(b4);
+			bi = b4;
+			LinkedList<BigInteger> factors;
+			try {
+				factors = pollardRho.getFactors(bi, System.currentTimeMillis() + 50000);
+				if (!factors.isEmpty()) {
+					BigInteger product = BigInteger.ONE;
+					for (BigInteger factor : factors) {
+						if (!factor.isProbablePrime(20)) {
+							throw new RuntimeException(bi.toString() + " " + factor.toString());
+						} else {
+							product = product.multiply(factor);
+							System.out.println("LEOELS");
+						}
+					}
+					if(product.compareTo(bi) != 0) {
+						throw new RuntimeException(bi.toString());
+					}
+				} else
+					System.out.println("fail");
+			} catch (TimeLimitExceededException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+=======
+	private static BigInteger factor(BigInteger number, BigInteger start) {
+		BigInteger bound = new BigInteger("" + (int)Math.sqrt(number.doubleValue()));
+		BigInteger START = start;
+		//BigInteger TWO = new BigInteger("2");
+		//int test = TWO.compareTo(bound);
+		for(BigInteger i = START; i.compareTo(bound) <= 0; i = i.add(BigInteger.ONE)) {
+			if(number.mod(i).compareTo(BigInteger.ZERO) == 0) {
+				return i;
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
+			}
+		}
+	}
+
+	private static ArrayList<BigInteger> read() {
+		ArrayList<BigInteger> numbers = new ArrayList<BigInteger>();
+
+		BufferedReader br = new BufferedReader(
+				new InputStreamReader(System.in));
+		
+		String line;
+		try {
+		line = br.readLine();
+			while(line != null && !line.equals("")) {
+				BigInteger tmp = new BigInteger(line);
+				numbers.add(tmp);
+				line = br.readLine();
+			}
+		} catch (IOException e) {
+			
+		}
+		return numbers;
+	}
+	
+	private static void print(ArrayList<LinkedList<BigInteger>> answers)
+	{
+		for(int i = 0; i < answers.size(); i++) {
+			LinkedList<BigInteger> factors = answers.get(i);
+			if(factors == null) {
+				System.out.println("fail");
+				System.out.println();
+				continue;
+			}
+			
+			for(BigInteger factor: factors)
+				System.out.println(factor);
+			
+			if(i != (answers.size() - 1))
+				System.out.println();
+		}
+		
+	}
+	
+	private static BigInteger[] fermat(BigInteger n)
+	{
+		BigInteger[] pair = new BigInteger[2];
+		
+		BigInteger TWO = new BigInteger("2");
+		BigInteger s =  new BigInteger("" + (int)Math.sqrt(n.doubleValue()));
+		BigInteger u = (s.multiply(TWO)).add(BigInteger.ONE);
+		BigInteger v = BigInteger.ONE;
+		BigInteger r = (s.pow(2)).subtract(n);
+		
+		while(r != BigInteger.ZERO)
+		{
+			while(r.compareTo(BigInteger.ZERO) > 0)
+			{
+				r = r.subtract(v);//  r-v;
+				v = v.add(TWO);//v+2;
+			}
+			
+			while(r.compareTo(BigInteger.ZERO) < 0)
+			{
+				r = r.add(u);
+				u = u.add(TWO);
+			}
+		}
+		
+		BigInteger a = (u.add(v).subtract(TWO)).divide(TWO);
+		pair[0] = a;
+		BigInteger b = (u.subtract(v)).divide(TWO);
+		pair[1] = b;
+		
+		return pair;
+		
+		
+	}
+<<<<<<< HEAD
+=======
+	
+	
+	
+	
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
+} 
