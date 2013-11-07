@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.math.BigInteger;
@@ -8,8 +9,6 @@ import javax.naming.TimeLimitExceededException;
 
 public class Main {
 
-	
-	
 	static BigInteger ZERO = BigInteger.ZERO;
 	static BigInteger ONE = BigInteger.ONE;
 	static BigInteger TWO = new BigInteger("2");
@@ -18,35 +17,124 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
+<<<<<<< HEAD
 		//main2(null);
 		ArrayList<LinkedList<BigInteger>> answers = new ArrayList<LinkedList<BigInteger>>();
 		ArrayList<BigInteger> numbers = read();
+=======
+		ArrayList<BigInteger> number = new ArrayList<BigInteger>();
+		ArrayList<LinkedList<String>> answers = new ArrayList<LinkedList<String>>();
+		BigInteger TWO = new BigInteger("2");
+		
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
 		
 		LinkedList<BigInteger> fail = new LinkedList<BigInteger>();
 		fail.add(BigInteger.ZERO);
 		
+<<<<<<< HEAD
 		PollardRho pollardRho = new PollardRho();
 		TrialDivision trialDivision = new TrialDivision();
 		
-		long timeSlice = 190;
-		long deadline = System.currentTimeMillis() + 10000;
+		long timeSlice = 50;
 		
-		int nrOfNumbers = numbers.size();
-		for(int i = 0; i < nrOfNumbers; i++) {
-			timeSlice = (deadline - System.currentTimeMillis())*(nrOfNumbers - i);
+		for(int i = 0; i < numbers.size(); i++) {
 			BigInteger currentNumber = numbers.get(i);
 			try {
-				answers.add(pollardRho.getFactors(currentNumber, (System.currentTimeMillis() + timeSlice)));
+				if(currentNumber.mod(TWO).compareTo(BigInteger.ZERO) == 0 || currentNumber.bitLength() < 50) {
+					answers.add(pollardRho.getFactors(currentNumber, (System.currentTimeMillis() + timeSlice)));	
+				} else {
+					BigInteger[] smallerN = fermat(currentNumber);
+	
+					answers.add(pollardRho.getFactors(smallerN[0], (System.currentTimeMillis() + timeSlice)));	
+					if(answers.get(i) != null)
+						answers.get(i).addAll(pollardRho.getFactors(smallerN[1], (System.currentTimeMillis() + timeSlice)));
+					else
+						answers.add(i, pollardRho.getFactors(currentNumber, (System.currentTimeMillis() + timeSlice)));
+				}
 			} catch (TimeLimitExceededException e) {
 				answers.add(null);
 			}
+=======
+		String line;
+		line = br.readLine();
+		while(line.length() >= 1){//line != null ) {//    //I can't run it on my computer  with line != null but it is nessesary for KATTIS
+			BigInteger tmp = new BigInteger(line);
+			number.add(tmp);
+			line = br.readLine();
+		} 
+		
+		for(int i = 0; i < number.size(); i++) {
+			answers.add(new LinkedList<String>());
+			BigInteger newNumber = number.get(i);
+			
+			if(newNumber.isProbablePrime(2))
+			{
+				answers.get(i).add(newNumber.toString());
+				continue;				
+			}
+			if(newNumber.bitLength() > 70) {
+				answers.get(i).add("fail");
+				continue;
+			}
+			
+			if(newNumber.mod(TWO).compareTo(BigInteger.ZERO) == 0 || newNumber.bitLength() < 50)
+			{
+				BigInteger start = new BigInteger("2");			
+				BigInteger factorNr = factor(newNumber, start);
+				
+				// Primtal
+				if(factorNr == BigInteger.ZERO) {
+					answers.get(i).add(newNumber.toString());
+					continue;
+				}
+	
+				while(factorNr != BigInteger.ZERO) {	
+					start = factorNr;
+					answers.get(i).add(factorNr.toString());
+					newNumber = newNumber.divide(factorNr);
+					
+					factorNr = factor(newNumber, start);
+				}			
+								
+				answers.get(i).add(newNumber.toString());				
+			}
+			
+			else
+			{
+				BigInteger[] smallerN = fermat(newNumber);
+				//System.out.println(smallerN[0] + " " + smallerN[1] + "|| ");
+				for(int j = 0; j < 2; j++)
+				{
+					BigInteger start = new BigInteger("2");			
+					BigInteger factorNr = factor(smallerN[j], start);
+					
+					// Primtal
+					if(factorNr == BigInteger.ZERO) {
+						answers.get(i).add(smallerN[j].toString());
+						continue;
+					}
+		
+					while(factorNr != BigInteger.ZERO) {	
+						start = factorNr;
+						answers.get(i).add(factorNr.toString());
+						smallerN[j] = smallerN[j].divide(factorNr);
+						
+						factorNr = factor(smallerN[j], start);
+						
+						
+					}
+					
+					answers.get(i).add(smallerN[j].toString());
+				}
+			}
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
 		}
 
-		
 		print(answers);
 	}
 	
-	public static void test (String[] args) {
+<<<<<<< HEAD
+	public static void main2 (String[] args) {
 		Random rnd = new Random();
 		PollardRho pollardRho = new PollardRho();
 		
@@ -78,6 +166,16 @@ public class Main {
 			} catch (TimeLimitExceededException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+=======
+	private static BigInteger factor(BigInteger number, BigInteger start) {
+		BigInteger bound = new BigInteger("" + (int)Math.sqrt(number.doubleValue()));
+		BigInteger START = start;
+		//BigInteger TWO = new BigInteger("2");
+		//int test = TWO.compareTo(bound);
+		for(BigInteger i = START; i.compareTo(bound) <= 0; i = i.add(BigInteger.ONE)) {
+			if(number.mod(i).compareTo(BigInteger.ZERO) == 0) {
+				return i;
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
 			}
 		}
 	}
@@ -155,4 +253,11 @@ public class Main {
 		
 		
 	}
+<<<<<<< HEAD
+=======
+	
+	
+	
+	
+>>>>>>> 94367359e8da43f1a0d5c535d0fbe57c7b75d31e
 } 

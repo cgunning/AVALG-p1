@@ -10,7 +10,6 @@ public class PollardRho {
 	static BigInteger ZERO = BigInteger.ZERO;
 	static BigInteger ONE = BigInteger.ONE;
 	static BigInteger TWO = new BigInteger("2");
-	
 	BigInteger n;
 	
 	long deadline;
@@ -52,6 +51,10 @@ public class PollardRho {
 	}
 	
 	public BigInteger factor(BigInteger n) throws TimeLimitExceededException {
+		
+		BigInteger f = KnownPrimes.factor(n);
+		if(f != null)
+			return f;
 		
 		BigInteger x = TWO;
 		BigInteger y = TWO;
