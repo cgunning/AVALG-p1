@@ -1,5 +1,7 @@
 import java.math.BigInteger;
 
+import javax.naming.TimeLimitExceededException;
+
 
 public class KnownPrimes {
 	private static int[] primeNumbers = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29 
@@ -194,7 +196,7 @@ public class KnownPrimes {
 	static BigInteger ONE = BigInteger.ONE;
 	static BigInteger TWO = new BigInteger("2");
 	
-	public static  BigInteger factor(BigInteger n) {
+	public static  BigInteger factor(BigInteger n, long deadline) throws TimeLimitExceededException {
 
 		BigInteger currentNumber = TWO;
 		for(int primeNumber : primeNumbers) {
@@ -202,6 +204,8 @@ public class KnownPrimes {
 			if(n.mod(currentNumber).compareTo(BigInteger.ZERO) == 0) {
 				return currentNumber;
 			}
+//			if(System.currentTimeMillis() >= deadline)
+//				throw new TimeLimitExceededException();
 		}
 
 		return null;

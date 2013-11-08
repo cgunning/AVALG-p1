@@ -19,6 +19,8 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException {
 		//main2(null);
+
+		long deadline = System.currentTimeMillis() + 10000;
 		ArrayList<LinkedList<BigInteger>> answers = new ArrayList<LinkedList<BigInteger>>();
 		ArrayList<BigInteger> numbers = read();
 		
@@ -28,8 +30,7 @@ public class Main {
 		PollardRho pollardRho = new PollardRho();
 		TrialDivision trialDivision = new TrialDivision();
 		
-		long timeSlice = 190;
-		long deadline = System.currentTimeMillis() + 10000;
+		long timeSlice;
 		
 		int nrOfNumbers = numbers.size();
 		for(int i = 0; i < nrOfNumbers; i++) {

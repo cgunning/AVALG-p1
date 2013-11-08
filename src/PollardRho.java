@@ -1,6 +1,7 @@
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 
 import javax.naming.TimeLimitExceededException;
 
@@ -22,7 +23,7 @@ public class PollardRho {
 		this.deadline = deadline;
 		LinkedList<BigInteger> factors = new LinkedList<BigInteger>();
 		
-		if(n.isProbablePrime(20)) {
+		if(n.isProbablePrime(2)) {
 			factors.add(number);
 			return factors;
 		}
@@ -51,8 +52,11 @@ public class PollardRho {
 	}
 	
 	public BigInteger factor(BigInteger n) throws TimeLimitExceededException {
+		if(n.isProbablePrime(10))
+			return n;
 		
-		BigInteger f = KnownPrimes.factor(n);
+		Random rnd = new Random();
+		BigInteger f = KnownPrimes.factor(n, deadline);
 		if(f != null)
 			return f;
 		
@@ -60,26 +64,26 @@ public class PollardRho {
 		BigInteger y = TWO;
 		BigInteger d = ONE;
 		
-		if(n.mod(TWO).compareTo(ZERO) == 0)
-			return TWO;
-		
-		while(d.compareTo(ONE) == 0) {
-			x = fun(x);
-			y = fun(fun(y));
-			d = GCD(x, y);
-			long now = System.currentTimeMillis();
-			if(now >= deadline)
- 				throw new TimeLimitExceededException();
+		while(true) {
+			BigInteger c = new BigInteger(n.bitLength()-1, rnd);
+			
+			while(d.compareTo(ONE) == 0) {
+				x = fun(x, c);
+				y = fun(fun(y, c), c);
+				d = GCD(x, y);
+				long now = System.currentTimeMillis();
+				if(now >= deadline)
+	 				throw new TimeLimitExceededException();
+			}
+			
+			if(d.compareTo(n) != 0 && d.isProbablePrime(2)) {
+				return d;
+			}
 		}
-		
-		if(d.compareTo(n) == 0 && !d.isProbablePrime(20)) {
-			return null;
-		}
-		return d;
 	}
 	
-	public BigInteger fun(BigInteger x) {
-		return x.pow(2).subtract(ONE).mod(n);
+	public BigInteger fun(BigInteger x, BigInteger c) {
+		return x.pow(2).add(c).mod(n);
 	}
 	
 	public BigInteger GCD(BigInteger x, BigInteger y) {

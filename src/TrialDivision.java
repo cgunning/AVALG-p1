@@ -191,6 +191,7 @@ public class TrialDivision {
 			, 15787, 15791, 15797, 15803, 15809, 15817, 15823, 15859, 15877, 15881 
 			, 15887, 15889, 15901, 15907, 15913, 15919, 15923, 15937, 15959, 15971 
 			, 15973, 15991, 16001};
+	
 	static BigInteger ZERO = BigInteger.ZERO;
 	static BigInteger ONE = BigInteger.ONE;
 	static BigInteger TWO = new BigInteger("2");
