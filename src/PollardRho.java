@@ -28,6 +28,8 @@ public class PollardRho {
 			return factors;
 		}
 		
+		KnownPrimes.setStartIndex(0);
+		
 		BigInteger factorNr = factor(n);
 		
 		// Misslyckades
@@ -55,10 +57,13 @@ public class PollardRho {
 		if(n.isProbablePrime(10))
 			return n;
 		
-		Random rnd = new Random();
+		
 		BigInteger f = KnownPrimes.factor(n, deadline);
 		if(f != null)
 			return f;
+		
+		Random rnd = new Random();
+		
 		
 		BigInteger x = TWO;
 		BigInteger y = TWO;

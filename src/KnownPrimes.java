@@ -195,13 +195,15 @@ public class KnownPrimes {
 	static BigInteger ZERO = BigInteger.ZERO;
 	static BigInteger ONE = BigInteger.ONE;
 	static BigInteger TWO = new BigInteger("2");
+	static int startIndex = 0;
 	
-	public static  BigInteger factor(BigInteger n, long deadline) throws TimeLimitExceededException {
+	public static BigInteger factor(BigInteger n, long deadline) throws TimeLimitExceededException {
 
 		BigInteger currentNumber = TWO;
-		for(int primeNumber : primeNumbers) {
-			currentNumber = new BigInteger("" + primeNumber);
+		for(int i = startIndex; i < primeNumbers.length; i++) {
+			currentNumber = new BigInteger("" + primeNumbers[i]);
 			if(n.mod(currentNumber).compareTo(BigInteger.ZERO) == 0) {
+				startIndex = i;
 				return currentNumber;
 			}
 //			if(System.currentTimeMillis() >= deadline)
@@ -209,5 +211,9 @@ public class KnownPrimes {
 		}
 
 		return null;
+	}
+	
+	public static void setStartIndex(int i) {
+		startIndex = i;
 	}
 }

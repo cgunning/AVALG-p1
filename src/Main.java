@@ -20,7 +20,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		//main2(null);
 
-		long deadline = System.currentTimeMillis() + 10000;
+		long deadline = System.currentTimeMillis() + 13000;
 		ArrayList<LinkedList<BigInteger>> answers = new ArrayList<LinkedList<BigInteger>>();
 		ArrayList<BigInteger> numbers = read();
 		
